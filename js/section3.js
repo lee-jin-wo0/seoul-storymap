@@ -14,15 +14,15 @@ async function initSection3Map() {
     // [지도 초기화] - 화면 전체 고정
     const mapS3 = L.map('map-s3', { zoomControl: false, scrollWheelZoom: false }).setView([37.5665, 126.9780 - 0.01], 15);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(mapS3);
+    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    // }).addTo(mapS3);
     // L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     //     attribution: '© OpenStreetMap contributors'
-    // }).addTo(mapS2);
-    // L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    //     attribution: '© OpenStreetMap contributors'
-    // }).addTo(mapS2);
+    // }).addTo(mapS3);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(mapS3);
 
     let activeGeoJsonLayer = null; // 현재 지도에 그려진 선 레이어
     let activeMarkers = []; // [추가] 출발, 도착 마커들을 관리할 배열
@@ -107,7 +107,7 @@ async function initSection3Map() {
                     if (targetFeature) {
                         activeGeoJsonLayer = L.geoJSON(targetFeature, {
                             style: {
-                                color: '#000000',
+                                color: '#ffffff',
                                 weight: 6,
                                 opacity: 0.9,
                                 lineJoin: 'round',
