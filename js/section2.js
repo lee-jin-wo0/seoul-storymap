@@ -13,15 +13,15 @@ const revealObserver = new IntersectionObserver((entries) => {
 // 2. 섹션 2 GeoJSON 연동 및 통합 로직
 async function initSection2Map() {
     const mapS2 = L.map('map-s2', { zoomControl: false, scrollWheelZoom: false }).setView([37.5759, 126.9850 - 0.01], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(mapS2);
+    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    // }).addTo(mapS2);
     // L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     //     attribution: '© OpenStreetMap contributors'
     // }).addTo(mapS2);
-    // L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    //     attribution: '© OpenStreetMap contributors'
-    // }).addTo(mapS2);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(mapS2);
 
     const pathLine = L.polyline([], {
         color: '#000000', weight: 3, dashArray: '8, 8', opacity: 1, lineJoin: 'round'
@@ -35,7 +35,7 @@ async function initSection2Map() {
         const timelineData = [];
         const locationsS2 = [];
 
-        // [데이터 추출] 부분 수정
+        // [데이터 추출] 
         targetIds.forEach(targetId => {
             const feature = geojsonData.features.find(f => String(f.id) === targetId);
 
@@ -45,11 +45,9 @@ async function initSection2Map() {
                     date: feature.properties.DATE || feature.properties.ADDR_OLD || "날짜 없음",
                     title: feature.properties.TITLE || feature.properties.CONTENTS_NAME,
                     desc: feature.properties.DESC || feature.properties.VALUE_03 || "설명 정보가 없습니다.",
-                    // 👇 [추가] 이미지 URL 데이터를 추출합니다. 없으면 빈 문자열 처리
                     imgUrl: feature.properties.IMG_MAIN_URL || ""
                 });
 
-                // (이하 좌표 추출 부분은 기존과 동일하게 유지)
                 let coords = null;
                 if (feature.geometry.type === 'Point') {
                     coords = feature.geometry.coordinates;
@@ -69,12 +67,11 @@ async function initSection2Map() {
             }
         });
 
-        // [HTML 카드 동적 생성] 부분 수정
+        // [HTML 카드 동적 생성]
         const timelineList = document.getElementById('sc2-timeline-list');
         timelineList.innerHTML = '';
 
         timelineData.forEach(item => {
-            // 👇 [추가] 이미지 URL이 있을 때만 <img> 태그를 생성합니다.
             const imageHTML = item.imgUrl ? `<img src="${item.imgUrl}" alt="${item.title}" class="sc2-item-img">` : "";
 
             const cardHTML = `
@@ -107,7 +104,6 @@ async function initSection2Map() {
 
             const marker = L.marker(loc.pos, { icon }).addTo(mapS2);
 
-            // 툴팁 기본적으로 숨김 상태(sc2-tooltip-hidden)로 생성
             marker.bindTooltip(loc.address, {
                 permanent: true,
                 direction: 'top',
@@ -125,7 +121,7 @@ async function initSection2Map() {
                     const activeId = String(entry.target.getAttribute('data-marker'));
                     const activeIndex = targetIds.indexOf(activeId);
 
-                    // 1. 툴팁 제어: 현재 카드의 툴팁만 켬
+                    // 1. 툴팁 제어
                     Object.keys(markers).forEach(key => {
                         const tooltipEl = markers[key]?.tooltip?.getElement();
                         if (tooltipEl) {
@@ -137,7 +133,7 @@ async function initSection2Map() {
                         }
                     });
 
-                    // 2. 마커 누적 제어: 현재 순서 이하만 켜고 나머지는 숨김 (잔상 제거)
+                    // 2. 마커 누적 제어
                     targetIds.forEach((id, index) => {
                         const container = document.getElementById(`map-marker-container-${id}`);
                         if (container) {
@@ -171,41 +167,7 @@ async function initSection2Map() {
     }
 }
 
-initSection2Map();
-
-/* =========================================
-   3. 전체 섹션 스크롤 감지 및 우측 Dot 네비게이션 연동
-========================================= */
+// 스크립트 실행 (오류 방지를 위해 DOMContentLoaded 안에 넣었습니다)
 document.addEventListener("DOMContentLoaded", () => {
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const sectionNum = entry.target.getAttribute('data-section');
-
-                document.querySelectorAll('.global-dot').forEach(dot => {
-                    dot.classList.remove('active');
-                });
-
-                const activeDot = document.querySelector(`.global-dot[data-target-section="${sectionNum}"]`);
-                if (activeDot) {
-                    activeDot.classList.add('active');
-                }
-            }
-        });
-    }, { threshold: 0.3 });
-
-    document.querySelectorAll('section[data-section]').forEach(section => {
-        sectionObserver.observe(section);
-    });
-
-    document.querySelectorAll('.global-dot').forEach(dot => {
-        dot.addEventListener('click', function () {
-            const targetNum = this.getAttribute('data-target-section');
-            const targetSection = document.querySelector(`section[data-section="${targetNum}"]`);
-
-            if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
+    initSection2Map();
 });
