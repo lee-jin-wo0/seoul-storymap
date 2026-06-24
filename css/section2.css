@@ -1,105 +1,5 @@
 /* =========================================
-   섹션 2 : 전체 구조
-========================================= */
-.sc2-section {
-    position: relative;
-    background-color: #0e0e0e;
-    color: white;
-}
-
-/* 텍스처 오버레이 공통 */
-.sc2-overlay {
-    position: absolute;
-    inset: 0;
-    background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
-    pointer-events: none;
-}
-
-.sc2-overlay-header {
-    opacity: 0.1;
-}
-
-/* =========================================
-   헤더 영역
-========================================= */
-.sc2-header {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    overflow: hidden;
-    padding: 0 2rem;
-}
-
-.sc2-header-bg {
-    position: absolute;
-    inset: 0;
-    background-color: #0e0e0e;
-    opacity: 0.9;
-}
-
-.sc2-header-content {
-    position: relative;
-    z-index: 10;
-    text-align: center;
-}
-
-.sc2-chapter-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-}
-
-.sc2-chapter-num {
-    font-family: 'Playfair Display', serif;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 2.25rem;
-}
-
-.sc2-divider {
-    height: 1px;
-    width: 3rem;
-    background-color: #a83228;
-}
-
-.sc2-chapter-subtitle {
-    color: #a83228;
-    font-weight: bold;
-    letter-spacing: 0.4em;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-}
-
-.sc2-title {
-    font-size: 2.25rem;
-    font-weight: bold;
-    color: white;
-    margin-bottom: 1.5rem;
-    max-width: 56rem;
-    letter-spacing: -0.02em;
-}
-
-.sc2-desc {
-    color: rgba(255, 255, 255, 0.7);
-    max-width: 42rem;
-    margin: 0 auto;
-    font-style: italic;
-    font-size: 1.125rem;
-}
-
-@media (min-width: 768px) {
-    .sc2-title {
-        font-size: 3rem;
-    }
-}
-
-/* =========================================
-   콘텐츠 레이아웃 (배경 지도 + 카드 스크롤 겹침)
+   [섹션 2 전용 스타일] 준비과정
 ========================================= */
 .sc2-content-wrap {
     display: grid;
@@ -107,9 +7,6 @@
     position: relative;
 }
 
-/* =========================================
-   지도 영역 (전체 화면 배경으로 완벽 고정)
-========================================= */
 .sc2-map-pane {
     grid-column: 1;
     grid-row: 1;
@@ -136,9 +33,6 @@
     z-index: 2;
 }
 
-/* =========================================
-   카드 영역 (지도 위를 스크롤)
-========================================= */
 .sc2-timeline-pane {
     grid-column: 1;
     grid-row: 1;
@@ -161,9 +55,6 @@
     gap: 80vh;
 }
 
-/* =========================================
-   개별 카드 디자인
-========================================= */
 .sc2-timeline-item {
     pointer-events: auto;
     background-color: rgba(14, 14, 14, 0.85);
@@ -199,7 +90,6 @@
     line-height: 1.625;
 }
 
-/* 스크롤 애니메이션 효과 (scroll-reveal) */
 .sc2-scroll-reveal {
     opacity: 0;
     transform: translateY(40px);
@@ -211,29 +101,17 @@
     transform: translateY(0);
 }
 
-/* =========================================
-   카드 내 이미지 스타일
-========================================= */
 .sc2-item-img {
     width: 100%;
-    /* 카드 가로폭에 꽉 차게 */
     height: auto;
-    /* 원본 비율 유지 */
     max-height: 220px;
-    /* 이미지가 너무 세로로 길면 잘라냄 */
     object-fit: cover;
-    /* 비율이 다를 경우 찌그러지지 않고 꽉 차게 */
     border-radius: 0.5rem;
-    /* 모서리 살짝 둥글게 */
     margin-bottom: 1.2rem;
-    /* 이미지 아래쪽 여백 */
     border: 1px solid rgba(255, 255, 255, 0.1);
-    /* 은은한 테두리 */
 }
 
-/* =========================================
-   지도 마커 애니메이션 및 디자인
-========================================= */
+/* 섹션 2: 마커 및 애니메이션 */
 @keyframes sc2-marker-pulse {
     0% {
         transform: scale(1);
@@ -297,9 +175,6 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* =========================================
-   지도 마커 툴팁 (주소 표시창) - 중복 제거됨
-========================================= */
 .sc2-marker-tooltip {
     background: rgba(0, 0, 0, 0.85) !important;
     color: #fff !important;
@@ -308,19 +183,16 @@
     padding: 6px 10px !important;
     font-size: 12px !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
-
     opacity: 1;
     transition: opacity 0.4s ease-in-out !important;
     pointer-events: none;
 }
 
-/* 툴팁 숨김 상태 클래스 */
 .sc2-tooltip-hidden {
     opacity: 0 !important;
     pointer-events: none;
 }
 
-/* 툴팁의 꼬리표(화살표) 색상 제어 */
 .leaflet-tooltip-top:before {
     border-top-color: rgba(0, 0, 0, 0.85) !important;
 }
@@ -329,23 +201,15 @@
     display: none;
 }
 
-/* 기본 상태: 모든 마커가 연하고 투명하게 보임 */
 .sc2-marker-dimmed {
-    opacity: 0.3; /* 투명도 조절 (0.1 ~ 0.4 사이로 원하는 만큼 연하게 설정 가능) */
+    opacity: 0.3;
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* 활성화 상태: 해당 구간에 도달하면 찐해짐 */
 .sc2-marker-active {
-    opacity: 1; /* 찐하게 */
-    transform: scale(1.1); /* (선택사항) 활성화되었을 때 마커를 살짝 키우면 더 강조됩니다 */
+    opacity: 1;
+    transform: scale(1.1);
     transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-
-/* 툴팁 투명도 효과 */
-.sc2-marker-tooltip {
-    transition: opacity 0.4s ease !important;
 }
 
 .sc2-tooltip-dimmed {
@@ -356,7 +220,6 @@
     opacity: 1 !important;
 }
 
-/* 연결선도 부드럽게 변하도록 transition 추가 */
 .leaflet-path {
     transition: stroke-opacity 0.4s ease;
 }
