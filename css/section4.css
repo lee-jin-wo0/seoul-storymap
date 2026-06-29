@@ -258,18 +258,82 @@
     transform: translateY(0);
 }
 
-/* 모바일 반응형 */
-@media (max-width: 768px) {
+
+/* =========================================
+   📱 모바일 전용 반응형 스타일 (섹션 4)
+========================================= */
+@media (max-width: 767px) {
+    /* --- 1. 설명 페이지 뷰 최적화 --- */
+    .sc4-intro-view {
+        padding: 5rem 1.5rem; /* 좌우 여백을 줄여 모바일에 맞춤 */
+        min-height: 100vh;
+    }
+    
+    .sc4-intro-chap {
+        font-size: 0.7rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .sc4-intro-title {
+        font-size: 1.8rem; /* 모바일 화면에 맞게 거대한 제목 축소 */
+        margin-bottom: 2rem;
+    }
+    
+    .sc4-intro-divider {
+        margin: 0 auto 2.5rem auto;
+    }
+    
+    /* 2단으로 나뉘어 있던 '핵심 거점 / 시위 현장'을 위아래 1단으로 배치 */
     .sc4-intro-cols {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+        grid-template-columns: 1fr; 
+        gap: 2.5rem;
+    }
+    
+    .sc4-col-title {
+        font-size: 1.15rem;
+        margin-bottom: 1rem;
+    }
+    
+    .sc4-col-desc {
+        font-size: 0.9rem;
+        line-height: 1.6;
     }
 
+
+    /* --- 2. 지도 페이지 및 범례(Legend) 최적화 --- */
+    .sc4-map-view {
+        height: 100vh; /* 모바일에서도 지도는 꽉 찬 화면 유지 */
+    }
+    
+    /* 화면을 가리지 않도록 범례 박스를 화면 양끝에 맞추고 텍스트 압축 */
     .sc4-legend {
-        left: 1rem;
-        bottom: 1rem;
-        right: 1rem;
+        bottom: 1.5rem;
+        left: 1.5rem;
+        right: 1.5rem; 
         min-width: auto;
         padding: 1.5rem;
+    }
+    
+    .sc4-legend-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .sc4-legend-list {
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    .sc4-legend-text strong {
+        font-size: 0.85rem;
+    }
+    
+    .sc4-legend-text span {
+        font-size: 0.7rem;
+    }
+    
+    .sc4-legend-footer {
+        font-size: 0.6rem;
+        padding-top: 0.8rem;
     }
 }

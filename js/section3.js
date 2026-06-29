@@ -19,8 +19,8 @@ async function initSection3Map() {
         attribution: '© OpenStreetMap contributors'
     }).addTo(mapS3);
 
-    let activeGeoJsonLayer = null; 
-    let activeMarkers = []; 
+    let activeGeoJsonLayer = null;
+    let activeMarkers = [];
 
     const sc3Groups = [
         { id: 'east-1', targetIds: ["52"] },
@@ -88,7 +88,7 @@ async function initSection3Map() {
                         mapS3.removeLayer(activeGeoJsonLayer);
                     }
                     activeMarkers.forEach(m => mapS3.removeLayer(m));
-                    activeMarkers = []; 
+                    activeMarkers = [];
 
                     // 새로운 선 지도에 그리기
                     if (targetFeature) {
@@ -98,9 +98,13 @@ async function initSection3Map() {
                                 weight: 6,
                                 opacity: 0.9,
                                 lineJoin: 'round',
-                                className: 'sc3-draw-path' 
+                                className: 'sc3-draw-path'
                             }
                         }).addTo(mapS3);
+
+                        // ⭐ [여기에 추가!] 모바일 크기 변화를 강제로 인식시키고 그려진 경로가 다 보이도록 화면 이동
+                        mapS3.invalidateSize();
+                        mapS3.fitBounds(activeGeoJsonLayer.getBounds(), { padding: [30, 30], maxZoom: 16 });
 
                         // 출발점, 도착점 마커 생성 로직
                         let lineCoords = [];
@@ -138,11 +142,11 @@ async function initSection3Map() {
                                 const length = path.getTotalLength();
                                 path.style.strokeDasharray = length;
                                 path.style.strokeDashoffset = length;
-                                path.getBoundingClientRect(); 
+                                path.getBoundingClientRect();
                                 path.style.transition = 'stroke-dashoffset 2.5s ease-in-out';
                                 path.style.strokeDashoffset = '0';
                             });
-                        }, 0); 
+                        }, 0);
                     }
                 }
             });

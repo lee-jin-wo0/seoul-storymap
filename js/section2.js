@@ -153,13 +153,14 @@ async function initSection2Map() {
         const curvedInitialCoords = generateCurvedPath(initialCoords);
         pathLine.setLatLngs(curvedInitialCoords);
 
-        // 스크롤 감지 로직 - 마커/툴팁 제어
+        // 스크롤 감지 로직 - 마커/툴팁 제어 및 지도 중앙 이동
         const markerObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const activeId = String(entry.target.getAttribute('data-marker'));
                     const activeIndex = targetIds.indexOf(activeId);
 
+                    // 1. 툴팁 활성화/비활성화 처리
                     Object.keys(markers).forEach(key => {
                         const tooltipEl = markers[key]?.tooltip?.getElement();
                         if (tooltipEl) {
@@ -173,6 +174,7 @@ async function initSection2Map() {
                         }
                     });
 
+                    // 2. 마커 활성화/비활성화 처리
                     targetIds.forEach((id, index) => {
                         const container = document.getElementById(`map-marker-container-${id}`);
                         if (container) {
@@ -186,10 +188,18 @@ async function initSection2Map() {
                         }
                     });
 
-                    const visibleCoords = targetIds.slice(0, activeIndex + 1).map(id => locationsS2.find(l => l.id === id)?.pos).filter(Boolean);
+                    // 3. 곡선 경로 그리기
+                    const visibleCoords = targetIds.slice(0, activeIndex + 1).map(id => locationsS2.find(l => String(l.id) === id)?.pos).filter(Boolean);
                     const curvedVisibleCoords = generateCurvedPath(visibleCoords);
                     pathLine.setLatLngs(curvedVisibleCoords);
                     pathLine.setStyle({ opacity: 1 });
+
+                    // ⭐ 4. [추가된 부분] 현재 활성화된 마커를 지도 중앙으로 이동
+                    const activeLoc = locationsS2.find(l => String(l.id) === activeId);
+                    if (activeLoc) {
+                        mapS2.invalidateSize(); // 모바일 45vh 크기 변화 강제 인식
+                        mapS2.panTo(activeLoc.pos, { animate: true, duration: 1.2 }); // 부드럽게 중앙으로 이동
+                    }
                 }
             });
         }, { threshold: 0.5, rootMargin: "-20% 0px -20% 0px" });

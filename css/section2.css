@@ -223,3 +223,81 @@
 .leaflet-path {
     transition: stroke-opacity 0.4s ease;
 }
+
+@media (max-width: 767px) {
+
+    /* 1. 지도 영역: 아래쪽에 딱 붙여서 창문처럼 만듭니다. */
+    .sc2-map-pane {
+        height: 45vh;
+        /* 화면 아래쪽 45%만 사용 */
+        position: sticky;
+        top: 55vh;
+        /* 위에서 55% 내려온 지점에 고정 */
+        bottom: 0;
+        z-index: 20;
+        overflow: hidden;
+        /* 지도가 밖으로 삐져나가지 않게 함 */
+    }
+
+    /* 2. 지도 내부 객체: 부모(45vh) 크기를 100% 따르게 함 */
+    .sc2-map-inner {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    /* 3. 텍스트 영역: 지도가 아래에서 기다리고 있도록 여백 조정 */
+    .sc2-timeline-pane {
+        padding: 5vh 1rem 60vh 1rem;
+        /* 하단 패딩을 60vh 줘서 마지막 카드가 지도 위로 올라오게 함 */
+    }
+
+    /* 4. 개별 카드: 55vh 안에 쏙 들어가도록 압축 */
+    .sc2-timeline-item {
+        padding: 1.2rem 1rem;
+        /* 카드 내부 여백 다이어트 */
+        background-color: #131210;
+        border-radius: 0.75rem;
+        max-width: 100%;
+    }
+
+    /* 5. 주소 및 날짜 (글씨 크기 및 여백 축소) */
+    .sc2-item-date {
+        font-size: 0.7rem;
+        margin-bottom: 0.4rem;
+        color: #b8922e;
+        /* 가독성을 위해 금색 포인트 유지 */
+    }
+
+    /* 6. 타이틀 (줄바꿈이 예쁘게 되도록 크기 및 줄간격 축소) */
+    .sc2-item-title {
+        font-size: 1.15rem;
+        line-height: 1.35;
+        margin-bottom: 0.75rem;
+    }
+
+    /* 7. 카드 내부 이미지 (높이를 확 줄여서 텍스트 공간 확보) */
+    .sc2-item-img {
+        max-height: 110px;
+        /* 기존 160px -> 110px로 축소 */
+        margin-bottom: 0.75rem;
+    }
+
+    /* 8. 본문 설명 (가독성 유지하며 크기 축소) */
+    .sc2-item-desc {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        color: rgba(238, 230, 216, 0.9);
+        word-break: keep-all;
+        /* 단어 단위로 줄바꿈 되도록 설정 */
+    }
+
+    /* 9. 지도 마커 크기 축소 (모바일 지도 비율에 맞게 앙증맞게 조정) */
+    .sc2-marker-circle {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.75rem;
+    }
+}

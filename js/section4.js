@@ -29,6 +29,8 @@ async function initSection4Map() {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !mapTriggered) {
                     mapTriggered = true;
+                    // ⭐ [여기에 추가!] 모바일 화면 변동 시 지도가 엉키지 않도록 크기 재계산
+                    mapS4.invalidateSize();
 
                     let delay = 0; // 마커가 릴레이처럼 차례대로 켜지게 하는 딜레이 시간
 
