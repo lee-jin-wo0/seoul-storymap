@@ -194,11 +194,44 @@ async function initSection2Map() {
                     pathLine.setLatLngs(curvedVisibleCoords);
                     pathLine.setStyle({ opacity: 1 });
 
-                    // ⭐ 4. [추가된 부분] 현재 활성화된 마커를 지도 중앙으로 이동
+                    // ⭐ 4. [수정된 부분] PC와 모바일을 구분하여 오프셋(이동량) 적용 후 이동
                     const activeLoc = locationsS2.find(l => String(l.id) === activeId);
                     if (activeLoc) {
-                        mapS2.invalidateSize(); // 모바일 45vh 크기 변화 강제 인식
-                        mapS2.panTo(activeLoc.pos, { animate: true, duration: 1.2 }); // 부드럽게 중앙으로 이동
+                        mapS2.invalidateSize();
+
+                        const zoom = mapS2.getZoom();
+                        const targetPoint = mapS2.project(activeLoc.pos, zoom);
+
+                        // 1. 현재 화면 너비 확인 (768px 이하를 모바일로 간주)
+                        const isMobile = window.innerWidth <= 768;
+
+                        // 2. 환경에 따른 오프셋 설정
+                        let offsetX = 0; // 가로 이동량
+                        let offsetY = 0; // 세로 이동량
+
+                        if (isMobile) {
+                            // 📱 [모바일 환경]
+                            // 가로 공간이 좁으므로 가로 이동량을 0으로 설정하여 마커를 중앙에 둡니다.
+                            offsetX = 0;
+
+                            // ※ 만약 모바일에서 카드가 지도 '아래쪽'을 가린다면, 
+                            // offsetY에 값을 넣어 마커를 화면 '위쪽'으로 살짝 올릴 수 있습니다. (예: offsetY = 100)
+                            // offsetY = 0; 
+                        } else {
+                            // 💻 [데스크톱 환경]
+                            // 카드가 왼쪽에 있으므로, 마커가 카드를 피해 오른쪽으로 나오도록 기존 수치를 유지합니다.
+                            offsetX = 300; // 카드 너비에 맞춰 조절 (예: 200 ~ 400)
+                        }
+
+                        // 3. X축(가로) 및 Y축(세로) 픽셀 값 조정
+                        // - 빼기(-)를 하면 마커가 화면의 '오른쪽/위쪽'으로 밀려 보입니다.
+                        // - 더하기(+)를 하면 마커가 화면의 '왼쪽/아래쪽'으로 밀려 보입니다.
+                        targetPoint.x -= offsetX;
+                        targetPoint.y -= offsetY;
+
+                        // 4. 조정된 픽셀 좌표를 다시 위경도 좌표로 변환 후 이동
+                        const offsetLatLng = mapS2.unproject(targetPoint, zoom);
+                        mapS2.panTo(offsetLatLng, { animate: true, duration: 1.2 });
                     }
                 }
             });

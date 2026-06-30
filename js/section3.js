@@ -101,10 +101,33 @@ async function initSection3Map() {
                                 className: 'sc3-draw-path'
                             }
                         }).addTo(mapS3);
-
-                        // ⭐ [여기에 추가!] 모바일 크기 변화를 강제로 인식시키고 그려진 경로가 다 보이도록 화면 이동
+                        // ⭐ [수정된 부분] 카드가 있는 '왼쪽' 공간을 크게 비워두어 선을 오른쪽으로 밀어냅니다.
                         mapS3.invalidateSize();
-                        mapS3.fitBounds(activeGeoJsonLayer.getBounds(), { padding: [30, 30], maxZoom: 16 });
+
+                        // 1. 현재 화면 너비 확인 (예: 768px 이하를 모바일로 간주)
+                        const isMobile = window.innerWidth <= 768;
+
+                        let padTopLeft, padBottomRight;
+
+                        if (isMobile) {
+                            // 📱 [모바일 환경] 
+                            // 가로 폭이 좁으므로 왼쪽 여백은 기본(예: 30)으로 줄입니다.
+                            // 만약 모바일에서 텍스트 카드가 '지도 아래쪽'에 뜬다면, 아래 여백(bottom)을 주어 지도를 위로 올립니다.
+                            padTopLeft = [30, 30];         // [왼쪽 여백, 위 여백]
+                            padBottomRight = [30, 150];    // [오른쪽 여백, 아래 여백] - 필요에 따라 150이라는 숫자를 조절하세요.
+                        } else {
+                            // 💻 [데스크톱 환경] 
+                            // 카드가 왼쪽에 있으므로 기존처럼 왼쪽 여백을 크게 줍니다.
+                            padTopLeft = [450, 50];        // [왼쪽 여백, 위 여백]
+                            padBottomRight = [50, 50];     // [오른쪽 여백, 아래 여백]
+                        }
+
+                        // 2. 조건에 맞게 계산된 패딩 적용
+                        mapS3.fitBounds(activeGeoJsonLayer.getBounds(), {
+                            paddingTopLeft: padTopLeft,
+                            paddingBottomRight: padBottomRight,
+                            maxZoom: 16
+                        });
 
                         // 출발점, 도착점 마커 생성 로직
                         let lineCoords = [];
